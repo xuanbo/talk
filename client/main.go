@@ -6,7 +6,7 @@ import (
 	"github.com/fatih/color"
 )
 
-const server = "139.199.33.51:5000"
+const server = "127.0.0.1:5000"
 var q = make(chan(int))
 
 func main() {
