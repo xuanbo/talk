@@ -2,22 +2,24 @@ package main
 
 import (
 	"net"
-	"log"
 	"fmt"
+	"github.com/fatih/color"
 )
 
+const server = "139.199.33.51:5000"
 var q = make(chan(int))
 
 func main() {
-	conn, err := net.Dial("tcp", "127.0.0.1:5000")
+	conn, err := net.Dial("tcp", server)
 	if err != nil {
-		log.Fatalln("connect error.", err)
+		color.Red("connect error. cause => %s", err)
+		return
 	}
-	log.Println("connect success.")
+	color.Green("connect server [%s] success.", server)
 	go read(conn)
 	go waitForInput(conn)
 	<- q
-	log.Println("client close.")
+	color.Yellow("client close.")
 }
 
 func read(conn net.Conn) {
@@ -26,28 +28,28 @@ func read(conn net.Conn) {
 		data := make([]byte, 1024)
 		n, err := conn.Read(data)
 		if err != nil {
-			log.Println("read error.", err)
+			color.Red("read error. %s", err)
 			q <- 1
 			break
 		}
-		fmt.Println(string(data[0:n]))
+		msg := string(data[0:n])
+		color.Green("=> %s", msg)
 	}
 }
 
 func waitForInput(conn net.Conn) {
 	for {
 		defer conn.Close()
-		fmt.Printf("input(:q): \n")
 		var msg string
 		fmt.Scanln(&msg)
 		if msg == ":q" {
-			log.Println("quit...")
+			color.Red("quit...")
 			q <- 1
 			break
 		}
 		_, err := conn.Write([]byte(msg))
 		if err != nil {
-			log.Println("client send error.", err)
+			color.Red("client send error. %s", err)
 			q <- 1
 			break
 		}
