@@ -1,8 +1,8 @@
 package main
 
 import (
-	"fmt"
 	"bytes"
+	"fmt"
 	"log"
 	"net"
 	"sync"
@@ -103,13 +103,13 @@ func handleConnection(conn net.Conn) {
 func join(conn net.Conn) {
 	addr := conn.RemoteAddr().String()
 	log.Printf("[%s] join\n", addr)
-	msg := fmt.Sprintf("welcome, [%d] person online.", cm.Len() + 1)
+	msg := fmt.Sprintf("welcome, [%d] person online.", cm.Len()+1)
 	_, err := conn.Write([]byte(msg))
 	if err != nil {
 		log.Println(err)
 		return
 	}
-	cm.Boradcast(conn, []byte("sys msg [" + addr + "] join"))
+	cm.Boradcast(conn, []byte("sys msg ["+addr+"] join"))
 	cm.Add(conn)
 }
 
@@ -118,5 +118,5 @@ func leave(conn net.Conn) {
 	cm.Remove(conn)
 	addr := conn.RemoteAddr().String()
 	log.Printf("[%s] leave\n", addr)
-	cm.Boradcast(conn, []byte("sys msg [" + addr + "] leave"))
+	cm.Boradcast(conn, []byte("sys msg ["+addr+"] leave"))
 }

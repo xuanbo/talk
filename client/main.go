@@ -1,13 +1,14 @@
 package main
 
 import (
-	"net"
 	"fmt"
 	"github.com/fatih/color"
+	"net"
 )
 
 const server = "127.0.0.1:5000"
-var q = make(chan(int))
+
+var q = make(chan (int))
 
 func main() {
 	conn, err := net.Dial("tcp", server)
@@ -18,7 +19,7 @@ func main() {
 	color.Green("connect server [%s] success.", server)
 	go read(conn)
 	go waitForInput(conn)
-	<- q
+	<-q
 	color.Yellow("client close.")
 }
 
@@ -33,7 +34,7 @@ func read(conn net.Conn) {
 			break
 		}
 		msg := string(data[0:n])
-		color.Green("=> %s", msg)
+		color.Cyan("=> %s", msg)
 	}
 }
 
